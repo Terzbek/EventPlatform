@@ -3,93 +3,67 @@ package com.example.demo.ui.view;
 import com.example.demo.model.Event;
 import com.example.demo.service.EventService;
 import com.example.demo.ui.layout.MainLayout;
+import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.card.CardVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.springframework.stereotype.Component;
+import com.vaadin.flow.component.card.Card;
+
 
 import java.util.List;
 
-
+@PageTitle("Home page")
 @Route(value = "", layout = MainLayout.class)
 public class HomeView extends VerticalLayout {
     private final EventService eventService;
 
     public HomeView(EventService eventService) {
         this.eventService = eventService;
-
         setSizeFull();
         setPadding(false);
         setSpacing(false);
-
         VerticalLayout leftPanel = new VerticalLayout();
         leftPanel.setWidth("200px");
-        leftPanel.getStyle().setBackgroundColor("black");
-
+        leftPanel.getStyle().setBackgroundColor("grey");
         VerticalLayout mainContent = new VerticalLayout();
         mainContent.setSizeFull();
         mainContent.add(new Span("Основной контент страницы"));
 
 
+
         List<Event> events = eventService.getEvents();
-
         for (Event event: events){
-            HorizontalLayout eventCard = new HorizontalLayout();
-            eventCard.setHeight("150px");
-            eventCard.setWidthFull();
-            eventCard.setAlignItems(Alignment.CENTER); // 🔑 вертикальное выравнивание
-            eventCard.setPadding(true);
-            eventCard.setSpacing(true);
-            eventCard.addClassName("event-card");
-
-            Image eventCardPoster = new Image("/images/poster.png", "poster logo");
-            eventCardPoster.setHeight("100px");
-            eventCardPoster.setWidth("70px");
-            eventCardPoster.getStyle().set("object-fit", "cover");
-
-            VerticalLayout eventCardBody = new VerticalLayout();
-            eventCardBody.setHeightFull();
-            eventCardBody.setWidthFull();
-            eventCardBody.setPadding(false);
-            eventCardBody.setSpacing(false);
-            eventCardBody.setJustifyContentMode(JustifyContentMode.CENTER);
-
-            H2 eventTitle = new H2(event.getTitle());
-            eventTitle.getStyle()
-                    .set("margin", "0")
-                    .set("font-size", "16px")
-                    .set("white-space", "nowrap")
-                    .set("overflow", "hidden")
-                    .set("text-overflow", "ellipsis");
-
-            Span eventDescription = new Span();
-            eventDescription.setText(event.getDescription());
-            eventDescription.getStyle()
-                    .set("font-size", "13px")
-                    .set("color", "gray")
-                    .set("overflow", "hidden")
-                    .set("display", "-webkit-box")
-                    .set("-webkit-line-clamp", "2")
-                    .set("-webkit-box-orient", "vertical");
-
-            Span eventAddress = new Span(event.getCountry());
-            eventAddress.getStyle()
-                    .set("font-size", "12px")
-                    .set("color", "#666");
-
-            Span eventTime = new Span(
-                    event.getStartDateTime() + " – " + event.getEndDateTime()
+            Card eventCard = new Card();
+            eventCard.addThemeVariants(
+                    CardVariant.LUMO_OUTLINED,
+                    CardVariant.LUMO_ELEVATED,
+                    CardVariant.LUMO_HORIZONTAL
             );
-            eventTime.getStyle()
-                    .set("font-size", "12px")
-                    .set("color", "#999");
 
-            eventCardBody.add(eventTitle, eventDescription, eventAddress, eventTime);
-            eventCard.add(eventCardPoster, eventCardBody);
+            Image eventPoster = new Image("/images/poster_2.jpg", "second poster alt");
+            eventPoster.setWidth("150px");
+            eventPoster.setHeight("auto");
+            eventPoster.getStyle().set("object-fit", "cover");
+            eventCard.setMedia(eventPoster);
+            eventCard.setTitle(new Div(event.getTitle()));
+            eventCard.setSubtitle(new Paragraph(event.getCategory()));
+            eventCard.add(new Paragraph(event.getDescription()));
+            eventCard.add(new Paragraph(event.getCountry()));
+            eventCard.setHeaderPrefix(new Avatar());
+            Span badge = new Span("Завтра");
+            badge.getElement().getThemeList().add("badge success");
+            eventCard.setHeaderSuffix(badge);
+            eventCard.setWidthFull();
+            Button bookVacationButton = new Button("Добавить в избранное");
+            Button learnMoreButton = new Button("Подробнее");
+            eventCard.addToFooter(bookVacationButton, learnMoreButton);
             mainContent.add(eventCard);
         }
 
