@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 
 import jakarta.persistence.*;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.time.LocalDate;
 
@@ -11,8 +12,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Unique
+    private String taxCode;
     private String firstName;
     private String lastName;
+    @Unique
     private String email;
     private String password;
     private String gender;
@@ -20,14 +24,15 @@ public class User {
 
     public User() {}
 
-    public User(Long id, String firstName, String lastName, String email, String gender, LocalDate dateOfBirth, String password) {
+    public User(Long id, @Unique String taxCode, String firstName, String lastName, @Unique String email, String password, String gender, LocalDate dateOfBirth) {
         this.id = id;
+        this.taxCode = taxCode;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
-        this.password = password;
     }
 
     public Long getId() {
@@ -36,6 +41,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTaxCode() {
+        return taxCode;
+    }
+
+    public void setTaxCode(String taxCode) {
+        this.taxCode = taxCode;
     }
 
     public String getFirstName() {
@@ -62,6 +75,14 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getGender() {
         return gender;
     }
@@ -76,13 +97,5 @@ public class User {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

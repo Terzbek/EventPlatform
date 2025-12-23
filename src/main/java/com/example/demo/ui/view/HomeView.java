@@ -32,10 +32,10 @@ public class HomeView extends VerticalLayout {
         setPadding(false);
         setSpacing(false);
         VerticalLayout leftPanel = new VerticalLayout();
-        leftPanel.setWidth("200px");
+        leftPanel.setWidth("250px");
 
         leftPanel.add(new Span("Фильтры"));
-
+        leftPanel.setFlexGrow(0);
         TextField inputTitle = new TextField();
         inputTitle.setPlaceholder("Search by event title");
         leftPanel.add(inputTitle);
