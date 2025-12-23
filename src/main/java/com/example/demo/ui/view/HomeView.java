@@ -12,6 +12,8 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.card.Card;
@@ -31,7 +33,22 @@ public class HomeView extends VerticalLayout {
         setSpacing(false);
         VerticalLayout leftPanel = new VerticalLayout();
         leftPanel.setWidth("200px");
-        leftPanel.getStyle().setBackgroundColor("grey");
+
+        leftPanel.add(new Span("Фильтры"));
+
+        TextField inputTitle = new TextField();
+        inputTitle.setPlaceholder("Search by event title");
+        leftPanel.add(inputTitle);
+
+        Select<String> selectCountry = new Select<>();
+        selectCountry.setLabel("Страна");
+        selectCountry.setItems("Kazakhstan", "Russia", "USA", "UK", "China");
+        selectCountry.setValue("Kazakhstan");
+        leftPanel.add(selectCountry);
+
+        HorizontalLayout bhl = new HorizontalLayout(new Button("Применить"), new Button("Сбросить"));
+        leftPanel.add(bhl);
+
         VerticalLayout mainContent = new VerticalLayout();
         mainContent.setSizeFull();
         mainContent.add(new Span("Основной контент страницы"));
