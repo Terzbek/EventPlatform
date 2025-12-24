@@ -2,30 +2,37 @@ package com.example.demo.service;
 
 
 import com.example.demo.model.User;
+import com.example.demo.model.UserDto;
 import com.example.demo.model.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public void addUser(User user){
-        userRepository.save(user);
-        System.out.println("User has been saved successfully!");
-    }
+    public void register(UserDto userDto) {
+        if (userRepository.existsByEmail(userDto.getEmail())){
+            throw new IllegalStateException("Email уже зарегистрирован");
+        }
 
-    public User customSave(String firstname, String lastname, String email, String password){
+        if (userRepository.existsByTaxCode(userDto.getTaxCode())){
+            throw new IllegalStateException("ИИН уже зарегистрирован");
+        }
+
         User user = new User();
-        user.setFirstName(firstname);
-        user.setLastName(lastname);
-        user.setEmail(email);
-        user.setPassword(password);
-
-        return userRepository.save(user);
+        user.setTaxCode(userDto.getTaxCode());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userRepository.save(user);
     }
 }

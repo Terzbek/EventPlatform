@@ -94,8 +94,7 @@ public class RegisterView extends VerticalLayout {
             UserDto registrationForm = new UserDto();
             try {
                 binder.writeBean(registrationForm);
-                System.out.println("Пользователь зарегистрирован:");
-                System.out.println(registrationForm);
+                userService.register(registrationForm);
 
                 error.setText("Регистрация прошла успешно!");
                 error.getStyle().set("color", "green");
