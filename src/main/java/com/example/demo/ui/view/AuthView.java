@@ -5,9 +5,11 @@ import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 
 @Route("/auth")
+@AnonymousAllowed
 public class AuthView extends VerticalLayout {
     public AuthView() {
         setSizeFull();
@@ -28,14 +30,7 @@ public class AuthView extends VerticalLayout {
 
         LoginForm loginForm = new LoginForm();
         loginForm.setI18n(loginI18n);
-
-        loginForm.addLoginListener(e -> {
-            String username = e.getUsername();
-            String password = e.getPassword();
-            System.out.println("USERNAME: " + username);
-            System.out.println("PASSWORD: " + password);
-
-        });
+        loginForm.setAction("login");
 
         add(
                 new H1("Event Platform"),

@@ -1,15 +1,32 @@
 package com.example.demo.configuration;
 
 
+import com.example.demo.ui.view.AuthView;
+import com.vaadin.flow.spring.security.VaadinSecurityConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
+
+@EnableWebSecurity
 @Configuration
 public class SecurityConfiguration {
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Configure Vaadin's security using VaadinSecurityConfigurer
+        http.with(VaadinSecurityConfigurer.vaadin(), configurer -> {
+            configurer.loginView(AuthView.class);
+        });
+
+        return http.build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new  BCryptPasswordEncoder();
     }
 }
